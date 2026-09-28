@@ -1,0 +1,185 @@
+import java.util.Scanner;
+
+public class CampusConnectApp {
+
+    System.out.println("Made by: Jhaztintroy Baluyot");
+    static final int TOTAL_REQUESTS = 5;
+    static final int MIN_PRIORITY = 1;
+    static final int MAX_PRIORITY = 5;
+    static final int MIN_DAYS = 1; 
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+      
+        String[] ids = new String[TOTAL_REQUESTS];
+        String[] names = new String[TOTAL_REQUESTS];
+        String[] categories = new String[TOTAL_REQUESTS];
+        int[] priorities = new int[TOTAL_REQUESTS];
+        String[] concerns = new String[TOTAL_REQUESTS];
+        int[] days = new int[TOTAL_REQUESTS];
+
+        System.out.println("=== CampusConnect ===");
+
+        for (int i = 0; i < TOTAL_REQUESTS; i++) {
+            System.out.println("\nRequest " + (i + 1) + " of " + TOTAL_REQUESTS);
+
+            ids[i] = readText(input, "Student ID: ");
+            names[i] = readText(input, "Student name: ");
+            categories[i] = readCategory(input);
+            priorities[i] = readPriority(input);
+            concerns[i] = readText(input, "Concern: ");
+
+            days[i] = estimateDays(categories[i], priorities[i]);
+
+            printTicket(i + 1, ids[i], names[i], categories[i], priorities[i], concerns[i], days[i]);
+        }
+
+        printSummary(names, categories, priorities, days);
+    }
+
+   
+    static String readText(Scanner input, String prompt) {
+        String text = "";
+        while (text.isEmpty()) {
+            System.out.print(prompt);
+            text = input.nextLine().trim(); 
+            if (text.isEmpty()) {
+                System.out.println("Cannot be blank. Try again.");
+            }
+        }
+        return text;
+    }
+
+
+    static String readCategory(Scanner input) {
+        String category = "";
+        while (!validateCategory(category)) {
+            System.out.print("Category (ENROLLMENT, DOCUMENT, PAYMENT, ADVISING): ");
+            category = input.nextLine().trim().toUpperCase(); 
+            if (!validateCategory(category)) {
+                System.out.println("Invalid category. Try again.");
+            }
+        }
+        return category;
+    }
+
+    
+    static boolean validateCategory(String category) {
+        return category.equals("ENROLLMENT")
+                || category.equals("DOCUMENT")
+                || category.equals("PAYMENT")
+                || category.equals("ADVISING");
+    }
+
+
+    
+    static int readPriority(Scanner input) {
+        int priority = 0;
+        while (priority < MIN_PRIORITY || priority > MAX_PRIORITY) {
+            System.out.print("Priority (1-5): ");
+            if (input.hasNextInt()) {
+                priority = input.nextInt();
+                if (priority < MIN_PRIORITY || priority > MAX_PRIORITY) {
+                    System.out.println("Priority must be from 1 to 5.");
+                }
+            } else {
+                System.out.println("Please type a number.");
+                input.next(); 
+            }
+            input.nextLine(); 
+        }
+        return priority;
+    }
+
+
+
+    
+    static int estimateDays(String category, int priority) {
+        int result = 0;
+
+        switch (category) {
+            case "ENROLLMENT":
+                result = 3;
+                break;
+            case "DOCUMENT":
+                result = 2;
+                break;
+            case "PAYMENT":
+                result = 1;
+                break;
+            case "ADVISING":
+                result = 4;
+                break;
+        }
+
+        if (priority == 5) {
+            result = result - 1;
+        }
+
+       
+        if (result < MIN_DAYS) {
+            result = MIN_DAYS;
+        }
+
+        return result;
+    }
+
+    
+    static void printTicket(int number, String id, String name, String category,
+                            int priority, String concern, int days) {
+        System.out.println();
+        System.out.println("---------- TICKET #" + number + " ----------");
+        System.out.println("Student ID : " + id);
+        System.out.println("Name       : " + name);
+        System.out.println("Category   : " + category);
+        System.out.println("Priority   : " + priority);
+        System.out.println("Concern    : " + concern);
+        System.out.println("Est. days  : " + days);
+        System.out.println("---------------------------------");
+    }
+
+
+    
+    static void printSummary(String[] names, String[] categories, int[] priorities, int[] days) {
+        int enrollment = 0;
+        int document = 0;
+        int payment = 0;
+        int advising = 0;
+        int totalDays = 0;
+        int highestIndex = 0; // index of the highest priority so far
+
+        for (int i = 0; i < categories.length; i++) {
+            if (categories[i].equals("ENROLLMENT")) {
+                enrollment++;
+            } else if (categories[i].equals("DOCUMENT")) {
+                document++;
+            } else if (categories[i].equals("PAYMENT")) {
+                payment++;
+            } else {
+                advising++;
+            }
+
+            totalDays = totalDays + days[i];
+
+          
+            if (priorities[i] > priorities[highestIndex]) {
+                highestIndex = i;
+            }
+        }
+
+
+        
+        double average = (double) totalDays / categories.length;
+
+        System.out.println("\n========== SUMMARY ==========");
+        System.out.println("ENROLLMENT: " + enrollment);
+        System.out.println("DOCUMENT  : " + document);
+        System.out.println("PAYMENT   : " + payment);
+        System.out.println("ADVISING  : " + advising);
+        System.out.println("Highest priority: " + names[highestIndex]
+                + " (" + categories[highestIndex] + ", priority " + priorities[highestIndex] + ")");
+        System.out.println("Average estimated days: " + average);
+        System.out.println("=============================");
+    }
+}
