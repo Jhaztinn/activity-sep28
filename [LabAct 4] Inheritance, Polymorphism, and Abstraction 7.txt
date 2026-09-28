@@ -1,0 +1,26 @@
+// Programmed by: Jhaztintroy Baluyot
+public class MessageDemo {
+    public static void main(String[] args) {
+        EmailMessage email = new EmailMessage("student@feutech.edu.ph");
+        SmsMessage sms = new SmsMessage("0917-000-0000");
+
+        Message[] messages = { email, sms };
+
+        System.out.println("=== Test 1: send() through Message[] ===");
+        for (Message m : messages) {
+            m.send();
+        }
+
+        System.out.println();
+        System.out.println("=== Test 2: showStatus() through Trackable ===");
+        Trackable[] trackables = { email, sms };
+        for (Trackable t : trackables) {
+            t.showStatus();
+        }
+
+        System.out.println();
+        System.out.println("Explanation:");
+        System.out.println("EmailMessage and SmsMessage are upcast to Message when stored in the array.");
+        System.out.println("At runtime, Java picks each object's own send(), which is dynamic method dispatch.");
+    }
+}

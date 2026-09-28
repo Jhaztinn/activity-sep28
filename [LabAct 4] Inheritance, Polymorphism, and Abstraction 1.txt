@@ -1,0 +1,20 @@
+// Programmed by: Jhaztintroy Baluyot
+public class Bus extends Vehicle {
+    private int capacity;
+
+    public Bus(String vehicleName, int capacity) {
+        super(vehicleName);
+        this.capacity = capacity;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    @Override
+    public String describeMovement() {
+        return super.describeMovement()
+                + " It follows a fixed campus route and carries up to "
+                + capacity + " passengers.";
+    }
+}

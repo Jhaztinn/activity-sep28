@@ -1,0 +1,16 @@
+// Programmed by: Jhaztintroy Baluyot
+public class EmailMessage extends Message implements Trackable {
+    public EmailMessage(String recipient) {
+        super(recipient);
+    }
+
+    @Override
+    public void send() {
+        System.out.println("Sending EMAIL notice to " + getRecipient() + " via the campus mail server.");
+    }
+
+    @Override
+    public void showStatus() {
+        System.out.println("Email status: delivered to inbox of " + getRecipient() + ".");
+    }
+}

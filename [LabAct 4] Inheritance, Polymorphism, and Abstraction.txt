@@ -1,0 +1,16 @@
+// Programmed by: Jhaztintroy Baluyot
+public class Vehicle {
+    private String vehicleName;
+ 
+    public Vehicle(String vehicleName) {
+        this.vehicleName = vehicleName;
+    }
+ 
+    public String getVehicleName() {
+        return vehicleName;
+    }
+ 
+    public String describeMovement() {
+        return vehicleName + " moves from one campus location to another.";
+    }
+}

@@ -1,0 +1,20 @@
+// Programmed by: Jhaztintroy Baluyot
+public class VehicleDemo {
+    public static void main(String[] args) {
+        Vehicle vehicle = new Vehicle("Campus Service Vehicle");
+        Bus bus = new Bus("FEU Tech Shuttle Bus", 40);
+ 
+        System.out.println("=== Test 1: Vehicle ===");
+        System.out.println(vehicle.describeMovement());
+ 
+        System.out.println();
+        System.out.println("=== Test 2: Bus ===");
+        System.out.println(bus.describeMovement());
+ 
+        System.out.println();
+        System.out.println("Explanation:");
+        System.out.println("Bus inherited vehicleName, getVehicleName(), and the general movement message from Vehicle.");
+        System.out.println("Bus overrode describeMovement() to reuse that message via super and add its capacity.");
+    }
+}
+ 

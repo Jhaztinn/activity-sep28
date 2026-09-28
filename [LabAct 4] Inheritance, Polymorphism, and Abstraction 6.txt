@@ -1,0 +1,16 @@
+// Programmed by: Jhaztintroy Baluyot
+public class SmsMessage extends Message implements Trackable {
+    public SmsMessage(String recipient) {
+        super(recipient);
+    }
+
+    @Override
+    public void send() {
+        System.out.println("Sending SMS notice to " + getRecipient() + " through the mobile network.");
+    }
+
+    @Override
+    public void showStatus() {
+        System.out.println("SMS status: received on phone number " + getRecipient() + ".");
+    }
+}
