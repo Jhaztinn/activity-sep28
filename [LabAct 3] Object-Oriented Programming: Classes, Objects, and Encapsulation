@@ -1,0 +1,69 @@
+public class StudentProfile {
+
+    private String studentId;
+    private String studentName;
+    private int quizScore;
+
+    
+    private static int studentCount = 0;
+
+  
+    public StudentProfile(String studentId, String studentName, int quizScore) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.quizScore = quizScore;
+        studentCount++;
+    }
+
+    
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public int getQuizScore() {
+        return quizScore;
+    }
+
+    public static int getStudentCount() {
+        return studentCount;
+    }
+
+    
+    public void setQuizScore(int quizScore) {
+        if (quizScore >= 0 && quizScore <= 100) {
+            this.quizScore = quizScore;
+            System.out.println("Score updated to " + quizScore + " for " + studentName);
+        } else {
+            System.out.println("Invalid score " + quizScore
+                    + " rejected. Score stays at " + this.quizScore + ".");
+        }
+    }
+
+  
+    public void displayProfile() {
+        System.out.println("Student ID : " + studentId);
+        System.out.println("Student Name : " + studentName);
+        System.out.println("Quiz Score : " + quizScore);
+        System.out.println("--------------------------");
+    }
+
+     public static void main(String[] args) {
+        StudentProfile s1 = new StudentProfile("2025-001", "Kazzy", 90);
+        StudentProfile s2 = new StudentProfile("2022-002", "Likoli", 70);
+ 
+        s1.displayProfile();
+        s2.displayProfile();
+ 
+        s1.setQuizScore(92);   // valid, so it updates
+        s2.setQuizScore(150);  // invalid, so it is rejected
+ 
+        s1.displayProfile();
+        s2.displayProfile();
+ 
+        System.out.println("Total students: " + StudentProfile.getStudentCount());
+    }
+}
