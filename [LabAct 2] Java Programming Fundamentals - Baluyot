@@ -1,7 +1,7 @@
 public class ReusableScoreAnalyzer {
 
     public static void main(String[] args) {
-
+       System.out.println("Made by: Jhaztintroy Baluyot");
         int[] scores = {72, 73, 75, 80, 89};
         double average = calculateAverage(scores);
         System.out.printf("Average: %.2f%n", average);
