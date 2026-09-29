@@ -1,0 +1,29 @@
+// Programmed by: Jhaztintroy Baluyot
+
+// Student is intentionally "dumb": it only stores identity data.
+// It has nothing to do with requests, categories, or days, so it is
+// its own class instead of being folded into ServiceRequest.
+public class Student {
+
+    private String studentId;
+    private String studentName;
+
+    public Student(String studentId, String studentName) {
+        if (studentId == null || studentId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Student ID cannot be blank.");
+        }
+        if (studentName == null || studentName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Student name cannot be blank.");
+        }
+        this.studentId = studentId.trim();
+        this.studentName = studentName.trim();
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+}
