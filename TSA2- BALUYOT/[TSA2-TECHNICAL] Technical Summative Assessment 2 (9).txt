@@ -1,0 +1,105 @@
+// Programmed by: Jhaztintroy Baluyot
+
+import java.util.Scanner;
+
+// Application layer: ALL console input/output lives here, not inside the
+// domain classes. This class's job is just to collect valid input, turn it
+// into the right ServiceRequest subtype, and hand it to RequestManager.
+public class CampusConnectApp {
+
+    static final int TOTAL_REQUESTS = 5;
+    static final int MIN_PRIORITY = 1;
+    static final int MAX_PRIORITY = 5;
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        RequestManager manager = new RequestManager(TOTAL_REQUESTS);
+
+        System.out.println("=== CampusConnect (OOP Edition) ===");
+
+        for (int i = 0; i < TOTAL_REQUESTS; i++) {
+            System.out.println("\nRequest " + (i + 1) + " of " + TOTAL_REQUESTS);
+
+            String id = readText(input, "Student ID: ");
+            String name = readText(input, "Student name: ");
+            String category = readCategory(input);
+            int priority = readPriority(input);
+            String concern = readText(input, "Concern: ");
+
+            Student student = new Student(id, name);
+            ServiceRequest request = createRequest(category, student, priority, concern);
+
+            manager.addRequest(request);
+            request.printTicket();
+        }
+
+        manager.printSummary();
+    }
+
+    // Factory-style method: this is the ONE place that decides which
+    // concrete subtype to build. Everything after this only ever uses the
+    // ServiceRequest reference, which is what makes the polymorphism real.
+    static ServiceRequest createRequest(String category, Student student, int priority, String concern) {
+        switch (category) {
+            case "ENROLLMENT":
+                return new EnrollmentRequest(student, priority, concern);
+            case "DOCUMENT":
+                return new DocumentRequest(student, priority, concern);
+            case "PAYMENT":
+                return new PaymentConcern(student, priority, concern);
+            case "ADVISING":
+                return new AdvisingRequest(student, priority, concern);
+            default:
+                throw new IllegalArgumentException("Unknown category: " + category);
+        }
+    }
+
+    static String readText(Scanner input, String prompt) {
+        String text = "";
+        while (text.isEmpty()) {
+            System.out.print(prompt);
+            text = input.nextLine().trim();
+            if (text.isEmpty()) {
+                System.out.println("Cannot be blank. Try again.");
+            }
+        }
+        return text;
+    }
+
+    static String readCategory(Scanner input) {
+        String category = "";
+        while (!validateCategory(category)) {
+            System.out.print("Category (ENROLLMENT, DOCUMENT, PAYMENT, ADVISING): ");
+            category = input.nextLine().trim().toUpperCase();
+            if (!validateCategory(category)) {
+                System.out.println("Invalid category. Try again.");
+            }
+        }
+        return category;
+    }
+
+    static boolean validateCategory(String category) {
+        return category.equals("ENROLLMENT")
+                || category.equals("DOCUMENT")
+                || category.equals("PAYMENT")
+                || category.equals("ADVISING");
+    }
+
+    static int readPriority(Scanner input) {
+        int priority = 0;
+        while (priority < MIN_PRIORITY || priority > MAX_PRIORITY) {
+            System.out.print("Priority (1-5): ");
+            if (input.hasNextInt()) {
+                priority = input.nextInt();
+                if (priority < MIN_PRIORITY || priority > MAX_PRIORITY) {
+                    System.out.println("Priority must be from 1 to 5.");
+                }
+            } else {
+                System.out.println("Please type a number.");
+                input.next();
+            }
+            input.nextLine();
+        }
+        return priority;
+    }
+}

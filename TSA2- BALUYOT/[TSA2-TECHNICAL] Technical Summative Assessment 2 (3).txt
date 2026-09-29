@@ -1,0 +1,96 @@
+// Programmed by: Jhaztintroy Baluyot
+
+// Abstract because "a service request" never exists on its own in real life -
+// it is always an ENROLLMENT, DOCUMENT, PAYMENT, or ADVISING request.
+// This class owns everything every request has in common: the student who
+// filed it, its priority, its concern text, and a unique ticket number.
+public abstract class ServiceRequest implements Prioritizable {
+
+    protected static final int MIN_PRIORITY = 1;
+    protected static final int MAX_PRIORITY = 5;
+    protected static final int MIN_DAYS = 1;
+
+    // Static member: a true class-level concern (every request needs a
+    // unique ticket number, and only the class itself should hand those out)
+    private static int nextTicketNumber = 1;
+
+    private final int ticketNumber;
+    private Student student;
+    private int priority;
+    private String concern;
+
+    protected ServiceRequest(Student student, int priority, String concern) {
+        if (student == null) {
+            throw new IllegalArgumentException("A request must belong to a student.");
+        }
+        if (priority < MIN_PRIORITY || priority > MAX_PRIORITY) {
+            throw new IllegalArgumentException("Priority must be from " + MIN_PRIORITY
+                    + " to " + MAX_PRIORITY + ".");
+        }
+        if (concern == null || concern.trim().isEmpty()) {
+            throw new IllegalArgumentException("Concern cannot be blank.");
+        }
+
+        this.student = student;
+        this.priority = priority;
+        this.concern = concern.trim();
+        this.ticketNumber = nextTicketNumber;
+        nextTicketNumber++;
+    }
+
+    // Every subtype MUST supply its own day estimate and its own label -
+    // that is what makes runtime polymorphism meaningful here.
+    public abstract int estimateDays();
+
+    public abstract String getCategoryLabel();
+
+    // Shared rule so subclasses don't each re-implement
+    // "minus one day for priority 5, never below MIN_DAYS".
+    protected final int applyPriorityDiscount(int baseDays) {
+        int result = baseDays;
+        if (this.priority == MAX_PRIORITY) {
+            result = result - 1;
+        }
+        if (result < MIN_DAYS) {
+            result = MIN_DAYS;
+        }
+        return result;
+    }
+
+    public int getTicketNumber() {
+        return ticketNumber;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public String getConcern() {
+        return concern;
+    }
+
+    @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    @Override
+    public boolean isHigherPriorityThan(Prioritizable other) {
+        return this.priority > other.getPriority();
+    }
+
+    // Behavior method, not a raw field dump: prints one ticket clearly.
+    // Note estimateDays() and getCategoryLabel() are called WITHOUT knowing
+    // the real subtype here - that call is resolved at runtime.
+    public void printTicket() {
+        System.out.println();
+        System.out.println("---------- TICKET #" + ticketNumber + " ----------");
+        System.out.println("Student ID : " + student.getStudentId());
+        System.out.println("Name       : " + student.getStudentName());
+        System.out.println("Category   : " + getCategoryLabel());
+        System.out.println("Priority   : " + priority);
+        System.out.println("Concern    : " + concern);
+        System.out.println("Est. days  : " + estimateDays());
+        System.out.println("---------------------------------");
+    }
+}

@@ -1,0 +1,20 @@
+// Programmed by: Jhaztintroy Baluyot
+
+public class PaymentConcern extends ServiceRequest {
+
+    private static final int BASE_DAYS = 1;
+
+    public PaymentConcern(Student student, int priority, String concern) {
+        super(student, priority, concern);
+    }
+
+    @Override
+    public int estimateDays() {
+        return applyPriorityDiscount(BASE_DAYS);
+    }
+
+    @Override
+    public String getCategoryLabel() {
+        return "PAYMENT";
+    }
+}

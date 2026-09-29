@@ -1,0 +1,12 @@
+// Programmed by: Jhaztintroy Baluyot
+
+// Capability interface: any request that can be compared/ranked by urgency
+// implements this. Kept separate from ServiceRequest because "being
+// comparable by priority" is a capability, not part of what a request IS.
+public interface Prioritizable {
+
+    int getPriority();
+
+    // true if THIS object outranks 'other' in priority
+    boolean isHigherPriorityThan(Prioritizable other);
+}

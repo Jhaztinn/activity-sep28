@@ -1,0 +1,89 @@
+// Programmed by: Jhaztintroy Baluyot
+
+// Replaces the six coordinated arrays from TSA1 with one array of
+// ServiceRequest. This is the piece that proves polymorphism: it only ever
+// talks to the abstract ServiceRequest reference, never to the concrete
+// subtypes, yet still gets the correct category label and day estimate
+// for each object depending on what it actually is at runtime.
+public class RequestManager {
+
+    private ServiceRequest[] requests;
+    private int count;
+
+    public RequestManager(int capacity) {
+        this.requests = new ServiceRequest[capacity];
+        this.count = 0;
+    }
+
+    public boolean isFull() {
+        return count >= requests.length;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    // Behavior method instead of exposing the array itself
+    public void addRequest(ServiceRequest request) {
+        if (isFull()) {
+            throw new IllegalStateException("Cannot add more requests, manager is full.");
+        }
+        requests[count] = request;
+        count++;
+    }
+
+    public void printAllTickets() {
+        for (int i = 0; i < count; i++) {
+            requests[i].printTicket(); // dynamic dispatch happens here
+        }
+    }
+
+    public void printSummary() {
+        int enrollment = 0;
+        int document = 0;
+        int payment = 0;
+        int advising = 0;
+        int totalDays = 0;
+
+        ServiceRequest highest = requests[0];
+
+        for (int i = 0; i < count; i++) {
+            ServiceRequest current = requests[i];
+
+            switch (current.getCategoryLabel()) {
+                case "ENROLLMENT":
+                    enrollment++;
+                    break;
+                case "DOCUMENT":
+                    document++;
+                    break;
+                case "PAYMENT":
+                    payment++;
+                    break;
+                case "ADVISING":
+                    advising++;
+                    break;
+            }
+
+            totalDays = totalDays + current.estimateDays();
+
+            // Prioritizable comparison - works through the interface,
+            // regardless of which concrete subtype is being compared.
+            if (current.isHigherPriorityThan(highest)) {
+                highest = current;
+            }
+        }
+
+        double average = (double) totalDays / count;
+
+        System.out.println("\n========== SUMMARY ==========");
+        System.out.println("ENROLLMENT: " + enrollment);
+        System.out.println("DOCUMENT  : " + document);
+        System.out.println("PAYMENT   : " + payment);
+        System.out.println("ADVISING  : " + advising);
+        System.out.println("Highest priority: " + highest.getStudent().getStudentName()
+                + " (" + highest.getCategoryLabel() + ", priority " + highest.getPriority() + ")");
+        System.out.println("Average estimated days: " + average);
+        System.out.println("=============================");
+    }
+}
